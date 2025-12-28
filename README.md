@@ -9,6 +9,8 @@
 
 The controller features a 14-bit magnetic encoder, inline current sensing, CAN and UART interfaces, and supports position, velocity, torque, and impedance control modes.
 
+# FOR SALE REALLY SOON
+
 > [!NOTE]
 > Optimized for NEMA17 format but it can also be attached to nema 23 and 14 steppers!
 
