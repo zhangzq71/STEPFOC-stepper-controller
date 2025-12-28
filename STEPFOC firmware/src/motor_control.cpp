@@ -985,7 +985,7 @@ Small delay between resistance mesure and inductance mesure to drain the coil
 
       PID.Ki = (float)1 - (float)exp(-controller.Resistance * LOOP_TIME / controller.Inductance);
       controller.Crossover_frequency = ((float)controller.current_control_bandwidth) / (float)(LOOP_FREQ / PI2);
-      PID.Kp_iq = (controller.Resistance * (float)(controller.Crossover_frequency / (float)(PID.Ki))) / 7; // devide by 7 is found empirically to give decent results ¯\_(ツ)_/¯
+      PID.Kp_iq = (controller.Resistance * (float)(controller.Crossover_frequency / (float)(PID.Ki))) / 7; // devide by x is found empirically to give decent results ¯\_(ツ)_/¯
       PID.Ki_iq = ((float)PID.Ki * (float)PID.Kp_iq);
       PID.Kp_id = PID.Kp_iq;
       PID.Ki_id = PID.Ki_iq;
