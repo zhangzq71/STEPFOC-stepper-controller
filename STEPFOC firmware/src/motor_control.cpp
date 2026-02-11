@@ -2297,7 +2297,6 @@ void Gripper_mode()
   Gripper.Same_command = 1;
 }
 
-
 /// @brief We need to calibrate the gripper before it can be used
 /// Calibration moves gripper to fully open position; maps the value
 /// Move to the fully closed position and map the value. Positions are detected
@@ -2311,8 +2310,11 @@ void Calibrate_gripper()
   static int grip_delay_1 = 0;
   static int grip_delay_tick_1 = 0;
 
-  int current_limit = 600;
-  int speed_limit = 20; // Lower this if it does not home
+  static int open_confirm_cnt = 0;
+  static int close_confirm_cnt = 0;
+
+  int current_limit = 500;
+  int speed_limit = 40; // Lower this if it does not home
   Gripper.In_calibration = 1;
 
   tick_gripper_cnt = tick_gripper_cnt + 1;
@@ -2329,11 +2331,21 @@ void Calibrate_gripper()
 
     /// If it is not moving and current is around the setpoint
 
-    if (isAroundValue(abs(controller.Velocity_Filter), 0, 700) && isAroundValue(abs(FOC.Iq), PID.Iq_current_limit, 30))
+    if (isAroundValue(abs(controller.Velocity_Filter), 0, 700) &&
+        isAroundValue(abs(FOC.Iq), PID.Iq_current_limit, 90))
+    {
+      close_confirm_cnt++;
+    }
+    else
+    {
+      close_confirm_cnt = 0;
+    }
+
+    if (close_confirm_cnt >= 3200)
     {
       Gripper.max_closed_position = controller.Position_Ticks;
-      // Gripper.max_closed_position =  Gripper.position_ticks;
       grip_cal_2 = 1;
+      close_confirm_cnt = 0;
     }
   }
   /***********************************/
@@ -2349,12 +2361,21 @@ void Calibrate_gripper()
     Velocity_mode();
     /// If it is not moving and current is around the setpoint
 
-    if (isAroundValue(abs(controller.Velocity_Filter), 0, 700) && isAroundValue(abs(FOC.Iq), PID.Iq_current_limit, 30))
+    if (isAroundValue(abs(controller.Velocity_Filter), 0, 700) &&
+        isAroundValue(abs(FOC.Iq), PID.Iq_current_limit, 90))
+    {
+      open_confirm_cnt++;
+    }
+    else
+    {
+      open_confirm_cnt = 0;
+    }
+
+    if (open_confirm_cnt >= 3200)
     {
       Gripper.max_open_position = controller.Position_Ticks;
-      // Gripper.max_open_position = Gripper.position_ticks;
       grip_cal_1 = 1;
-      /// record the posiiton, switch speed setpoint sign
+      open_confirm_cnt = 0;
     }
   }
   /***********************************/
@@ -2395,6 +2416,8 @@ void Calibrate_gripper()
     controller.sleep_pin_state = 0;
     controller.Controller_mode = 0;
     Gripper.In_calibration = 0;
+    open_confirm_cnt = 0;
+    close_confirm_cnt = 0;
   }
   /***********************************/
 
@@ -2417,5 +2440,7 @@ void Calibrate_gripper()
     controller.sleep_pin_state = 0;
     controller.Controller_mode = 0;
     Gripper.In_calibration = 0;
+    open_confirm_cnt = 0;
+    close_confirm_cnt = 0;
   }
 }

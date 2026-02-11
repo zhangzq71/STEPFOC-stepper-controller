@@ -238,9 +238,9 @@ void Write_config()
 /// @brief  Reset to default config.  First write to EEPROM then read it back.
 void Set_Default_config(){
 
-  writeInt(SERIAL_NUMBER_EEPROM,1111);
+  writeInt(SERIAL_NUMBER_EEPROM,111);
   writeInt(HARDWARE_VERSION_EEPROM, 1);
-  writeInt(BATCH_DATA_EEPROM, 17012025);
+  writeInt(BATCH_DATA_EEPROM, 125);
 
   writeInt(CAN_ID_EEPROM, 0);
   writeInt(SOFTWARE_VERSION_EEPROM, 103);
