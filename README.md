@@ -11,7 +11,6 @@
 
 The controller features a 14-bit magnetic encoder, inline current sensing, CAN and UART interfaces, and supports position, velocity, torque, and impedance control modes.
 
-# FOR SALE REALLY SOON
 
 > [!NOTE]
 > Optimized for NEMA17 format but it can also be attached to nema 23 and 14 steppers!
@@ -23,7 +22,7 @@ The controller features a 14-bit magnetic encoder, inline current sensing, CAN a
 ## Where to buy? **(Available soon)**
 
 You can buy the STEPFOC stepper controller here: <br />
- https://source-robotics.com/products/spectral-micro-bldc-controller
+ https://source-robotics.com/products/stepfoc-stepper-controller
 
 ## 💾Firmware 
 STEPFOC firmware is located [here](https://github.com/PCrnjak/STEPFOC-stepper-controller/tree/main/STEPFOC%20firmware). To install it follow [this guide!](https://source-robotics.github.io/STEPFOC-docs/flashing_firmware/)
