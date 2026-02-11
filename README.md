@@ -5,7 +5,7 @@
 
 <img src="Photos/STEPFOC PCB.png" alt="drawing" width="5000"/>
 
-# 📖 Project Overview
+## 📖 Project Overview
 
 **STEPFOC** is a FOC based stepper motor controller designed to deliver affordable, high-performance hardware paired with powerful open-source software. Its mission is to transform low-cost stepper motors into high-performance robotic servos, enabling advanced robotics applications without the high price tag.
 
