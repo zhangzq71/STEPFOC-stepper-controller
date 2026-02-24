@@ -30,6 +30,7 @@ STEPFOC firmware is located [here](https://github.com/PCrnjak/STEPFOC-stepper-co
 
 ## 📚Documentation:
 
+- [Motor hardware setup guide](https://youtu.be/60UMc95H8iE)
 - [Official website](https://source-robotics.com/products/spectral-micro-bldc-controller)
 - [DOCS](https://source-robotics.github.io/STEPFOC-docs/) Offers great starting guides with project examples + code 
 
