@@ -19,7 +19,7 @@ The controller features a 14-bit magnetic encoder, inline current sensing, CAN a
 > [!IMPORTANT]
 >     **STEPFOC stepper driver is built on the same hardware and software foundation as the Spectral Micro BLDC driver. As a result, some references or images in this documentation may still show the Spectral Micro, since both drivers share about 99% of their features. They also use the same CAN and UART command sets, with only minor differences in UART-based calibration and setup procedures.**
 
-## Where to buy? **(Available soon)**
+## Where to buy? 
 
 You can buy the STEPFOC stepper controller here: <br />
  https://source-robotics.com/products/stepfoc-stepper-controller
