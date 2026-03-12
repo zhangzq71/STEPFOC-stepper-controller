@@ -179,6 +179,9 @@ void UART_protocol(Stream &Serialport)
                 PID.Feedforward_current = 0;
                 PID.Velocity_setpoint = 3000;
                 controller.trigger_value = 0;
+                controller.hall_trigger = 1;
+                controller.hall_edge_needs_init = 1;
+                controller.hall_index = 0;
                 controller.Controller_mode = 8;
 
                 Serialport.print("HALL ");

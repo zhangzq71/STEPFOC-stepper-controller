@@ -75,6 +75,8 @@ void Device_info_CAN();
 
 void Encoder_data_CAN();
 
+void KT_data_CAN();
+
 void Current_data_CAN();
 
 void State_of_Errors_CAN();

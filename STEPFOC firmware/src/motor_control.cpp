@@ -2035,19 +2035,45 @@ void Hall_Indexing_mode()
   // Read hall sensor
   controller.additional2_var = digitalReadFast(ADDITIONAL2);
 
-  // If hall sensor value is same as the trigger value we set
-  if (controller.additional2_var == controller.trigger_value)
+  if (controller.trigger_value == 2)
+  {
+    // Edge trigger mode: trigger on any state change (rising or falling)
+    if (controller.hall_edge_needs_init)
+    {
+      // First call after (re-)arming: snapshot current state, skip edge check
+      controller.additional2_var_prev = controller.additional2_var;
+      controller.hall_edge_needs_init = 0;
+    }
+    else if (controller.hall_trigger == 1)
+    {
+      if (controller.additional2_var != controller.additional2_var_prev)
+      {
+        // Any edge detected — latch position and signal host
+        PID.Position_setpoint = controller.Position_Ticks;
+        controller.hall_trigger = 0;
+        controller.hall_index = 1;
+      }
+      controller.additional2_var_prev = controller.additional2_var;
+    }
+
+    if (controller.hall_trigger == 0)
+      Position_mode();
+    else
+      Velocity_mode();
+  }
+  // Level trigger mode: trigger when pin matches trigger_value (0 or 1)
+  else if (controller.additional2_var == controller.trigger_value)
   {
     if (controller.hall_trigger == 1)
     {
       PID.Position_setpoint = controller.Position_Ticks;
       controller.hall_trigger = 0;
+      controller.hall_index = 1;
     }
     Position_mode();
   }
   else
   {
-
     Velocity_mode();
     controller.hall_trigger = 1;
   }

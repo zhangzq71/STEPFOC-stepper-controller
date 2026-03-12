@@ -163,8 +163,11 @@ typedef struct
     volatile bool additional1_var = 0;
     volatile bool additional2_var = 0;
 
-    volatile bool hall_trigger = 1; // used to record if hall sensor was triggered or not, normal state of hall is high (1)
-    volatile bool trigger_value = 0;
+    volatile bool hall_trigger = 1;          // used to record if hall sensor was triggered or not, normal state of hall is high (1)
+    volatile uint8_t trigger_value = 0;      // 0=low level, 1=high level, 2=any edge
+    volatile bool hall_index = 0;            // output: set to 1 when edge is detected
+    volatile bool additional2_var_prev = 0;  // previous Hall reading, for edge detection
+    volatile bool hall_edge_needs_init = 1;  // flag to snapshot prev on first call after (re-)arming edge mode
 
     // temp / testing ?
     volatile int calibration_offset_current = 500;

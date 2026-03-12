@@ -408,12 +408,19 @@ void CAN_protocol(Stream &Serialport)
 
                 if(CAN_RX_msg.len == 4){
 
-                    controller.Controller_mode = 8;
                     uint8_t temp_buffer[] =  {CAN_RX_msg.data[0], CAN_RX_msg.data[1], CAN_RX_msg.data[2]};
-                    bool bitArray[8];
-                    byteToBitsBigEndian(CAN_RX_msg.data[3],bitArray);
                     PID.Velocity_setpoint = three_bytes_to_int(temp_buffer);
-                    controller.trigger_value = bitArray[0];
+                    // data[3] directly encodes trigger_value: 0=low, 1=high, 2=any edge
+                    controller.trigger_value = CAN_RX_msg.data[3];
+                    // Only re-arm when transitioning INTO hall mode.
+                    // If already in mode 8 (host is spamming to poll state), preserve trigger state.
+                    if (controller.Controller_mode != 8)
+                    {
+                        controller.hall_trigger = 1;
+                        controller.hall_edge_needs_init = 1;
+                        controller.hall_index = 0;
+                    }
+                    controller.Controller_mode = 8;
 
                     controller.watchdog_reset = 1;
                     controller.Wrong_DL = 0;
@@ -719,6 +726,18 @@ void CAN_protocol(Stream &Serialport)
                 break;
             }
 
+            case OUT_IN_KT:{
+                #if (DEBUG_COMS > 0)
+                Serialport.println("Kt request");
+                #endif
+                if (CAN_RX_msg.type == REMOTE_FRAME)
+                {
+                    KT_data_CAN();
+                    controller.watchdog_reset = 1;
+                }
+                break;
+            }
+
             case OUT_IN_IQ:{
                 #if (DEBUG_COMS > 0)
                 Serialport.println("Current/Torque request");
@@ -1002,6 +1021,25 @@ void Current_data_CAN()
     controller.Send_heartbeat = 0;
 }
 
+/// @brief Send Kt (motor torque constant) value
+/// Direction Driver -> host (response to REMOTE_FRAME on OUT_IN_KT)
+void KT_data_CAN()
+{
+    // Pack float as 4 bytes big-endian (same byte order as fourBytesToFloat)
+    union { float f; uint32_t i; } data;
+    data.f = controller.Kt;
+    CAN_TX_msg.data[0] = (data.i >> 24) & 0xFF;
+    CAN_TX_msg.data[1] = (data.i >> 16) & 0xFF;
+    CAN_TX_msg.data[2] = (data.i >> 8)  & 0xFF;
+    CAN_TX_msg.data[3] =  data.i        & 0xFF;
+    CAN_TX_msg.len = 4;
+    CAN_TX_msg.type = DATA_FRAME;
+    CAN_TX_msg.format = STANDARD_FORMAT;
+    CAN_TX_msg.id = Combine_2_CAN_ID(controller.CAN_ID, OUT_IN_KT, controller.Error);
+    CANSend(&CAN_TX_msg);
+    controller.Send_heartbeat = 0;
+}
+
 /// @brief  Send state of all errors in motor driver (2 byte)
 /// Direction Driver -> host
 void State_of_Errors_CAN()
@@ -1111,7 +1149,7 @@ void Data_pack_1_CAN()
 
 void HALL_data_pack()
 {
-    bool HALL_array[] = {controller.hall_trigger,controller.additional2_var,0,0,0,0,0,0};
+    bool HALL_array[] = {controller.hall_trigger, controller.additional2_var, controller.hall_index, 0, 0, 0, 0, 0};
 
     byte data_buffer_send[4];
     intTo3Bytes(controller.Position_Ticks, data_buffer_send);

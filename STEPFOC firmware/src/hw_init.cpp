@@ -28,8 +28,8 @@ void Init_Digital_Inputs(void)
 {
 
 
-	pinMode(ADDITIONAL1, INPUT_PULLUP);
-	pinMode(ADDITIONAL2, INPUT_PULLUP);
+	pinMode(ADDITIONAL1, INPUT_PULLUP); //INPUT_PULLUP
+	pinMode(ADDITIONAL2, INPUT_PULLUP); //INPUT_PULLUP
 
 	//attachInterrupt(digitalPinToInterrupt(ADDITIONAL1),ADDITIONAL1_INTERRUPT,CHANGE);
 	//attachInterrupt(digitalPinToInterrupt(ADDITIONAL2),ADDITIONAL2_INTERRUPT,CHANGE);
